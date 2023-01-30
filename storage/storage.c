@@ -53,6 +53,8 @@ static struct {
    uint8_t data[MAX_READ_SIZE];
 }  read_rsp;
 
+int asprintf(char **restrict strp, const char *restrict fmt, ...);
+
 static uint32_t insert_fd(int open_flags, int fd)
 {
     uint32_t handle = fd;
@@ -212,7 +214,7 @@ err_response:
 
 static void sync_parent(const char* path) {
     int parent_fd;
-    char* parent_path = dirname(path);
+    char* parent_path = dirname((char *)path);
     parent_fd = TEMP_FAILURE_RETRY(open(parent_path, O_RDONLY));
     if (parent_fd >= 0) {
         fsync(parent_fd);

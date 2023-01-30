@@ -24,14 +24,13 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include <cutils/android_filesystem_config.h>
-
 #include "checkpoint_handling.h"
 #include "ipc.h"
 #include "log.h"
 #include "rpmb.h"
 #include "storage.h"
 
+#define AID_SYSTEM 1000
 #define REQ_BUFFER_SIZE 4096
 static uint8_t req_buffer[REQ_BUFFER_SIZE + 1];
 
@@ -261,7 +260,7 @@ int main(int argc, char* argv[]) {
     int rc;
 
     /* drop privileges */
-    if (drop_privs() < 0) return EXIT_FAILURE;
+//    if (drop_privs() < 0) return EXIT_FAILURE;
 
     /* parse arguments */
     parse_args(argc, argv);

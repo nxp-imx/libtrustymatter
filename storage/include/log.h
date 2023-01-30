@@ -13,12 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#pragma once
 
-#include <stdint.h>
-#include <trusty/interface/storage.h>
+#include <stdio.h>
+#define LOG_TAG "storageproxyd"
 
-int ipc_connect(const char *device, const char *service_name);
-void ipc_disconnect(void);
-ssize_t ipc_get_msg(struct storage_msg *msg, void *req_buf, size_t req_buf_len);
-int ipc_respond(struct storage_msg *msg, void *out, size_t out_size);
+/* Used to retry syscalls that can return EINTR. */
+#define TEMP_FAILURE_RETRY(exp) ({         \
+   typeof(exp) _rc;                   \
+   do {                                   \
+      _rc = (exp);                       \
+   } while (_rc == -1 && errno == EINTR); \
+   _rc; })
+
+#define ALOGE printf
+#define ALOGW printf
+#define ALOGI printf
+#define ALOGD printf
+#define ALOGV printf

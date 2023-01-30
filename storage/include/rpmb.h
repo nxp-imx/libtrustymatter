@@ -16,7 +16,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <trusty/interface/storage.h>
+#include <interface/storage.h>
 
 enum dev_type { UNKNOWN_RPMB, MMC_RPMB, VIRT_RPMB, UFS_RPMB, SOCK_RPMB };
 

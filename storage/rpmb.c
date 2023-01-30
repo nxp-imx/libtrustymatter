@@ -16,6 +16,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <stddef.h>
 #include <scsi/scsi.h>
 #include <scsi/scsi_proto.h>
 #include <scsi/sg.h>
@@ -31,8 +32,6 @@
 
 #include <linux/major.h>
 #include <linux/mmc/ioctl.h>
-
-#include <hardware_legacy/power.h>
 
 #include "ipc.h"
 #include "log.h"
@@ -146,7 +145,7 @@ static int log_buf(int priority, const char* prefix, const uint8_t* buf, size_t 
              * (also flushes the header line on the first iteration and sets up
              * for printing the buffer itself)
              */
-            LOG_PRI(priority, LOG_TAG, "%s", line);
+            //LOG_PRI(priority, LOG_TAG, "%s", line);
             memset(line, 0, LOG_BUF_SIZE);
             cur = line;
             /* Shift output over by the length of the prefix */
@@ -162,7 +161,7 @@ static int log_buf(int priority, const char* prefix, const uint8_t* buf, size_t 
         }
         cur += rc;
     }
-    LOG_PRI(priority, LOG_TAG, "%s", line);
+    //LOG_PRI(priority, LOG_TAG, "%s", line);
 
     return 0;
 
@@ -273,7 +272,7 @@ static enum scsi_result check_scsi_sense(const uint8_t* sense_buf, size_t len) {
 
     ALOGE("Unexpected SCSI sense data: key=%hhu, asc=%hhu, ascq=%hhu\n", sense_key,
           additional_sense_code, additional_sense_code_qualifier);
-    log_buf(ANDROID_LOG_ERROR, "sense buffer: ", sense_buf, len);
+    //log_buf(ANDROID_LOG_ERROR, "sense buffer: ", sense_buf, len);
     return SCSI_RES_ERR;
 }
 
@@ -395,7 +394,8 @@ static int send_ufs_rpmb_req(int sg_fd, const struct storage_rpmb_send_req* req)
 
     bool is_request_write = req->reliable_write_size > 0;
 
-    wl_rc = acquire_wake_lock(PARTIAL_WAKE_LOCK, UFS_WAKE_LOCK_NAME);
+    //wl_rc = acquire_wake_lock(PARTIAL_WAKE_LOCK, UFS_WAKE_LOCK_NAME);
+    wl_rc = 0;
     if (wl_rc < 0) {
         ALOGE("%s: failed to acquire wakelock: %d, %s\n", __func__, wl_rc, strerror(errno));
         return wl_rc;
@@ -458,7 +458,8 @@ static int send_ufs_rpmb_req(int sg_fd, const struct storage_rpmb_send_req* req)
     }
 
 err_op:
-    wl_rc = release_wake_lock(UFS_WAKE_LOCK_NAME);
+    //wl_rc = release_wake_lock(UFS_WAKE_LOCK_NAME);
+    wl_rc = 0;
     if (wl_rc < 0) {
         ALOGE("%s: failed to release wakelock: %d, %s\n", __func__, wl_rc, strerror(errno));
     }

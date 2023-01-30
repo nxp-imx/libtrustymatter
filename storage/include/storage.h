@@ -16,7 +16,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <trusty/interface/storage.h>
+#include <interface/storage.h>
 
 int storage_file_delete(struct storage_msg *msg,
                         const void *req, size_t req_len);

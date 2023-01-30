@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#pragma once
 
-#define LOG_TAG "storageproxyd"
+#include <stdint.h>
+#include <interface/storage.h>
 
-#include <log/log.h>
-
+int ipc_connect(const char *device, const char *service_name);
+void ipc_disconnect(void);
+ssize_t ipc_get_msg(struct storage_msg *msg, void *req_buf, size_t req_buf_len);
+int ipc_respond(struct storage_msg *msg, void *out, size_t out_size);
