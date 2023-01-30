@@ -19,7 +19,7 @@
 
 #include <linux/ioctl.h>
 #include <linux/types.h>
-#include <linux/uio.h>
+#include <sys/uio.h>
 
 /**
  * enum transfer_kind - How to send an fd to Trusty
