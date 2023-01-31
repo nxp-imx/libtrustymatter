@@ -9,3 +9,15 @@ include_directories("./storage/include")
 include_directories("./storage/include/linux")
 include_directories("./libtrusty/include")
 add_executable(storageproxyd ${STORAGE_LOCAL} ${LIBTRUSTY_LOCAL})
+
+install(TARGETS storageproxyd  DESTINATION sbin)
+
+find_package(PkgConfig)
+include(GNUInstallDirs)
+pkg_check_modules(SYSTEMD systemd)
+
+if(SYSTEMD_FOUND)
+    pkg_get_variable(SYSTEMD_UNIT_DIR systemd systemdsystemunitdir)
+endif()
+
+install(FILES storage//storageproxyd.service DESTINATION ${SYSTEMD_UNIT_DIR})

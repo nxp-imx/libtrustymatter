@@ -1,0 +1,9 @@
+[Unit]
+Description=NXP i.MX Securestorage Proxy Daemon
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/storageproxyd -p /var -r /dev/mmcblk2rpmb -d /dev/trusty-ipc-dev0
+
+[Install]
+WantedBy=multi-user.target
