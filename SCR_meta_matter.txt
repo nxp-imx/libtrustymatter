@@ -9,7 +9,7 @@ NXP provided open source repos
 Package: libtrustymatter
 Outgoing License: Apache-2.0
 License File: LICENSE
-Release Location: https://github.com/NXPmicro
+Release Location: https://github.com/nxp-imx/libtrustymatter
 Type of content: Source codes
 Description and comments: Source codes for Trusty OS middleware and services for Linux
 Origin: NXP (Apache-2.0)
