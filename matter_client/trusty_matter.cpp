@@ -93,12 +93,13 @@ int TrustyMatter::SignWithDACKey(const uint8_t *msg, size_t msg_size,
     return MATTER_ERROR_OK;
 }
 
-int TrustyMatter::P256KeypairInitialize(uint64_t &p256_handler, uint8_t *pubkey) {
+int TrustyMatter::P256KeypairInitialize(uint64_t &p256_handler, uint8_t fabric_index, uint8_t *pubkey) {
     P256KPInitializeRequest req;
     P256KPInitializeResponse resp;
     int rc = 0;
 
     req.p256_handler = p256_handler;
+    req.fabric_index = fabric_index;
     rc = trusty_ipc.trusty_matter_send(MATTER_P256_KEYPAIR_INITIALIZE, req, &resp);
     if (rc != MATTER_ERROR_OK) {
         printf("%s: Failed to send request!\n", __func__);
@@ -235,6 +236,77 @@ int TrustyMatter::P256KeypairECDH_derive_secret(const uint64_t &p256_handler, co
 
     memcpy(secret, resp.secret.begin(), resp.secret.buffer_size());
     secret_length = resp.secret.buffer_size();
+    return MATTER_ERROR_OK;
+}
+
+bool TrustyMatter::HasOpKeypairForFabric(const uint8_t fabric_index) {
+    int rc = 0;
+    HasOpKeypairForFabricRequest req;
+    HasOpKeypairForFabricResponse resp;
+
+    req.fabric_index = fabric_index;
+    // IPC call
+    rc = trusty_ipc.trusty_matter_send(MATTER_HAS_OP_KEYPAIR_FOR_FABRIC, req, &resp);
+    if (rc != MATTER_ERROR_OK) {
+         printf("%s: Failed to send request!\n", __func__);
+         return false;
+    }
+
+    return resp.keypair_exist;
+}
+
+int TrustyMatter::CommitOpKeypairForFabric(const uint64_t p256_handler, const uint8_t fabric_index) {
+    int rc = 0;
+    CommitOpKeypairForFabricRequest req;
+    CommitOpKeypairForFabricResponse resp;
+
+    req.p256_handler = p256_handler;
+    req.fabric_index = fabric_index;
+
+    // IPC call
+    rc = trusty_ipc.trusty_matter_send(MATTER_COMMIT_OP_KEYPAIR_FOR_FABRIC, req, &resp);
+    if (rc != MATTER_ERROR_OK) {
+         printf("%s: Failed to send request!\n", __func__);
+         return MATTER_ERROR_SECURE_HW_COMMUNICATION_FAILED;
+    }
+
+    return MATTER_ERROR_OK;
+}
+
+int TrustyMatter::RemoveOpKeypairForFabric(const uint8_t fabric_index) {
+    int rc = 0;
+    RemoveOpKeypairForFabricRequest req;
+    RemoveOpKeypairForFabricResponse resp;
+
+    req.fabric_index = fabric_index;
+    // IPC call
+    rc = trusty_ipc.trusty_matter_send(MATTER_REMOVE_OP_KEYPAIR_FOR_FABRIC, req, &resp);
+    if (rc != MATTER_ERROR_OK) {
+         printf("%s: Failed to send request!\n", __func__);
+         return MATTER_ERROR_SECURE_HW_COMMUNICATION_FAILED;
+    }
+
+    return MATTER_ERROR_OK;
+}
+
+int TrustyMatter::SignWithStoredOpKey(const uint8_t fabric_index, const uint8_t *msg,
+                                      size_t msg_size, uint8_t *sig, size_t &sig_size) {
+    int rc = 0;
+    SignWithStoredOpKeyRequest req;
+    SignWithStoredOpKeyResponse resp;
+
+    req.fabric_index = fabric_index;
+    req.msg.Reinitialize(msg, msg_size);
+    // IPC call
+    rc = trusty_ipc.trusty_matter_send(MATTER_SIGN_WITH_STORED_OPKEY, req, &resp);
+    if (rc != MATTER_ERROR_OK) {
+         printf("%s: Failed to send request!\n", __func__);
+         return MATTER_ERROR_SECURE_HW_COMMUNICATION_FAILED;
+    }
+
+    memcpy(sig, resp.sig.begin(), resp.sig.buffer_size());
+    sig_size = resp.sig.buffer_size();
+
     return MATTER_ERROR_OK;
 }
 

@@ -33,7 +33,7 @@ public:
     int ExportCDCert(uint8_t *out, size_t in_size, size_t &out_size);
     int SignWithDACKey(const uint8_t *msg, size_t msg_size,
                        uint8_t *sig, size_t sig_buf_size, size_t &sig_size);
-    int P256KeypairInitialize(uint64_t &p256_handler, uint8_t *pubkey);
+    int P256KeypairInitialize(uint64_t &p256_handler, uint8_t fabric_index, uint8_t *pubkey);
     int P256KeypairSerialize(const uint64_t &p256_handler, uint8_t *prikey);
     int P256KeypairDeserialize(uint64_t &p256_handler, uint8_t *pubkey, size_t pubkey_size, uint8_t *prikey, size_t prikey_size);
     int P256KeypairDestory(uint64_t &p256_handler);
@@ -41,6 +41,11 @@ public:
     int P256KeypairNewCSR(const uint64_t &p256_handler, uint8_t *out_csr, size_t &csr_length);
     int P256KeypairECDH_derive_secret(const uint64_t &p256_handler, const uint8_t *remote_pubkey,
                                       size_t remote_pubkey_length, uint8_t *secret, size_t &secret_length);
+    bool HasOpKeypairForFabric(const uint8_t fabric_index);
+    int CommitOpKeypairForFabric(const uint64_t p256_handler, const uint8_t fabric_index);
+    int RemoveOpKeypairForFabric(const uint8_t fabric_index);
+    int SignWithStoredOpKey(const uint8_t fabric_index, const uint8_t *msg,
+                            size_t msg_size, uint8_t *sig, size_t &sig_size);
 
 private:
     int ExportCert(matter_command cmd, uint8_t *out, size_t in_size, size_t &out_size);

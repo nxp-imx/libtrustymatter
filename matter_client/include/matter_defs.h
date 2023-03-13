@@ -38,6 +38,7 @@ typedef enum {
     MATTER_ERROR_UNIMPLEMENTED = -8,
     MATTER_ERROR_SECURE_HW_BUSY = -9,
     MATTER_ERROR_NO_ENOUGH_MEMORY = -10,
+    MATTER_ERROR_INVALID_FABRIC_ID = -11,
 } matter_error_t;
 
 #ifdef __cplusplus
