@@ -119,19 +119,16 @@ struct SignWithDAKeyResponse: public MatterResponse {
 
 struct P256KPInitializeRequest: public Serializable {
     size_t SerializedSize() const override {
-        return sizeof(uint64_t) + sizeof(uint8_t);
+        return sizeof(uint64_t);
     }
     uint8_t* Serialize(uint8_t* buf, const uint8_t* end) const override {
-        buf = append_uint64_to_buf(buf, end, p256_handler);
-        return append_to_buf(buf, end, &fabric_index, sizeof(fabric_index));
+        return append_uint64_to_buf(buf, end, p256_handler);
     }
     bool Deserialize(const uint8_t** buf_ptr, const uint8_t* end) override {
-        return copy_uint64_from_buf(buf_ptr, end, &p256_handler) &&
-               copy_from_buf(buf_ptr, end, &fabric_index, sizeof(fabric_index));
+        return copy_uint64_from_buf(buf_ptr, end, &p256_handler);
     }
 
     uint64_t p256_handler;
-    uint8_t fabric_index;
 };
 
 struct P256KPInitializeResponse: public MatterResponse {

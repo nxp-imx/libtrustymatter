@@ -27,6 +27,7 @@
 constexpr uint32_t MATTER_RESP_BIT = 1;
 constexpr uint32_t MATTER_STOP_BIT = 2;
 constexpr uint32_t MATTER_REQ_SHIFT = 2;
+constexpr uint8_t kTrustyMagicNumberFabricIndex[] = { 0x2, 0x3, 0x5, 0x7, 0x0B, 0x0D, 0x11 };
 
 enum matter_command: uint32_t {
     MATTER_IMPORT_DAC         = (0x1 << MATTER_REQ_SHIFT),
@@ -52,6 +53,7 @@ enum matter_command: uint32_t {
     MATTER_COMMIT_OP_KEYPAIR_FOR_FABRIC          = (0x208 << MATTER_REQ_SHIFT),
     MATTER_REMOVE_OP_KEYPAIR_FOR_FABRIC          = (0x209 << MATTER_REQ_SHIFT),
     MATTER_SIGN_WITH_STORED_OPKEY                = (0x20a << MATTER_REQ_SHIFT),
+    MATTER_P256_KEYPAIR_INITIALIZE_FIXED_HANDLE  = (0x20b << MATTER_REQ_SHIFT),
 };
 
 struct matter_message {
