@@ -93,14 +93,17 @@ int TrustyMatter::SignWithDACKey(const uint8_t *msg, size_t msg_size,
     return MATTER_ERROR_OK;
 }
 
-int TrustyMatter::P256KeypairInitialize(uint64_t &p256_handler, uint8_t fabric_index, uint8_t *pubkey) {
+int TrustyMatter::P256KeypairInitialize(uint64_t &p256_handler, uint8_t *pubkey) {
     P256KPInitializeRequest req;
     P256KPInitializeResponse resp;
     int rc = 0;
 
     req.p256_handler = p256_handler;
-    req.fabric_index = fabric_index;
-    rc = trusty_ipc.trusty_matter_send(MATTER_P256_KEYPAIR_INITIALIZE, req, &resp);
+    if (!memcmp(&p256_handler, kTrustyMagicNumberFabricIndex, sizeof(kTrustyMagicNumberFabricIndex))) {
+        rc = trusty_ipc.trusty_matter_send(MATTER_P256_KEYPAIR_INITIALIZE_FIXED_HANDLE, req, &resp);
+    } else {
+        rc = trusty_ipc.trusty_matter_send(MATTER_P256_KEYPAIR_INITIALIZE, req, &resp);
+    }
     if (rc != MATTER_ERROR_OK) {
         printf("%s: Failed to send request!\n", __func__);
         return MATTER_ERROR_SECURE_HW_COMMUNICATION_FAILED;
@@ -197,7 +200,7 @@ int TrustyMatter::P256KeypairNewCSR(const uint64_t &p256_handler, uint8_t *out_c
     return MATTER_ERROR_OK;
 }
 
-int TrustyMatter::P256KeypairDestory(uint64_t &p256_handler) {
+int TrustyMatter::P256KeypairDestroy(uint64_t &p256_handler) {
     int rc = 0;
     P256KPDestoryRequest req;
     P256KPDestoryResponse resp;
